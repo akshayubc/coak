@@ -1,34 +1,674 @@
 <html>
     <head>
-        <title>u_code</title>
-        <script  type="text/javascript" src="jquery.min.js"></script>
+        <title>Co.ak - Dark Code Runner</title>
+        <script type="text/javascript" src="jquery.min.js"></script>
         <link href="jquery-ui/jquery-ui.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="style.css">
         <script src="jquery-ui/jquery-ui.js"></script> 
-        
+        <style>
+            .docs-popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                max-width: 500px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+
+            .docs-content {
+                padding: 0;
+            }
+
+            .docs-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+                background: linear-gradient(45deg, #3b82f6, #2563eb);
+                color: white;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .docs-header h3 {
+                margin: 0;
+                font-size: 1.2rem;
+                font-weight: 600;
+            }
+
+            .close-docs {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: background 0.3s ease;
+            }
+
+            .close-docs:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            .docs-body {
+                padding: 1.5rem;
+            }
+
+            .command-group {
+                margin-bottom: 1.5rem;
+            }
+
+            .command-group h4 {
+                margin: 0 0 0.8rem 0;
+                color: #3b82f6;
+                font-size: 1rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .command-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.8rem;
+                margin-bottom: 0.5rem;
+                background: rgba(59, 130, 246, 0.05);
+                border-radius: 8px;
+                border-left: 3px solid #3b82f6;
+            }
+
+            .command-text {
+                font-family: 'Courier New', monospace;
+                font-weight: 600;
+                color: #1e40af;
+                font-size: 0.9rem;
+            }
+
+            .command-desc {
+                color: #6b7280;
+                font-size: 0.85rem;
+                text-align: right;
+                max-width: 200px;
+            }
+
+            .hidden {
+                display: none !important;
+            }
+        </style> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Dark-themed web code runner with HTML, CSS, and JavaScript support">
     </head>
 
     <body>
         <div id="header">
-                <!-- <div id=logo>
-                    <h3>u_code</h3>
-                </div> -->
                 <div class="containerb">
                     <button class="toggleButton" id="html">HTML</button>
                     <button class="toggleButton" id="css">CSS</button>
                     <button class="toggleButton" id="js">JavaScript</button>
                     <button class="toggleButton" id="io">Output</button>
                 </div>
+                <div class="nav-controls">
+                    <button onclick="startListening()" class="nav-mic-btn" id="micBtn">🎤 Mic</button>
+                    <button onclick="showDocumentation()" class="nav-docs-btn" id="notepadBtn">📝 Docs</button>
+                </div>
                 
-                <!-- <div id="css"></div>
-                <div id="js"></div> -->
         </div>
-        <textarea id="htmlpanel" class="panel"><p id="change">This is a beta version for Co.ak</p></textarea>
-        <textarea id="csspanel" class="panel hidden">p {font-family:Arial;}</textarea>
-        <textarea id="jspanel" class="panel hidden">document.getElementById("change").innerHTML ="will be running code on this editor";</textarea>
+        
+        <div class="panels-container">
+        <textarea id="htmlpanel" class="panel"><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-title">Welcome to Co.ak!</h1>
+        <p id="message" class="subtitle">This is a live code runner. Edit the HTML, CSS, or JavaScript to see changes!</p>
+        
+        <div class="controls">
+            <button onclick="changeMessage()" class="primary-btn">Change Tagline Text</button>
+        </div>
+        
+        <div class="card">
+            <h2>Features</h2>
+            <ul>
+                <li>Live HTML editing</li>
+                <li>Real-time CSS styling</li>
+                <li>Interactive JavaScript</li>
+            </ul>
+                </div>
+                
+        <div class="demo-section">
+            <h3>Try This:</h3>
+            <p>Edit the CSS to change colors, or modify the JavaScript to add new interactions!</p>
+        </div>
+    </div>
+</body>
+</html></textarea>
+        <textarea id="csspanel" class="panel hidden">body {
+    font-family: 'Roboto', sans-serif !important;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: black;
+    min-height: 100vh;
+}
+
+* {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    text-shadow: none;
+}
+
+.subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    color: #1e3a8a;
+    line-height: 1.6;
+    font-weight: 400;
+    text-shadow: none;
+}
+
+#message {
+    color: #1e3a8a !important;
+    text-shadow: none !important;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.primary-btn {
+    background: linear-gradient(45deg, #8b5cf6, #a855f7, #c084fc);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+}
+
+
+
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card h2 {
+    color: black;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+}
+
+.card li {
+    padding: 0.5rem 0;
+    color: black;
+    font-size: 1.1rem;
+    position: relative;
+    padding-left: 1.5rem;
+    font-weight: 500;
+}
+
+.card li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+.demo-section {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.demo-section h3 {
+    color: black;
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.demo-section p {
+    color: black;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .primary-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .nav-controls {
+        gap: 0.3rem;
+        margin-right: 0.5rem;
+    }
+
+    .nav-mic-btn, .nav-docs-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}</textarea>
+        <textarea id="jspanel" class="panel hidden">function changeMessage() {
+    const message = document.getElementById('message');
+    const messages = [
+        'JavaScript is working perfectly!',
+        'Try editing the CSS to change colors!',
+        'This is a live code runner!',
+        'Edit the HTML to add more content!',
+        'The styling looks amazing!',
+        'Live updates are instant!',
+        'Try editing the JavaScript!',
+        'JavaScript is so powerful!'
+    ];
+    
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    message.innerHTML = randomMessage;
+    message.style.color = '#ff6b6b';
+    message.style.fontWeight = 'bold';
+    message.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.3)';
+    
+    // Add a nice animation
+    message.style.transform = 'scale(1.05)';
+    setTimeout(() => {
+        message.style.transform = 'scale(1)';
+    }, 200);
+}
+
+
+// Speech recognition functionality
+let recognition = null;
+let isListening = false;
+
+function initSpeechRecognition() {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onstart = function() {
+            isListening = true;
+            document.getElementById('micBtn').classList.add('listening');
+            document.getElementById('micBtn').textContent = '🎤 Listening...';
+        };
+        
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            processVoiceCommand(transcript);
+        };
+        
+        recognition.onend = function() {
+            isListening = false;
+            document.getElementById('micBtn').classList.remove('listening');
+            document.getElementById('micBtn').textContent = '🎤 Mic';
+        };
+        
+        recognition.onerror = function(event) {
+            console.error('Speech recognition error:', event.error);
+            isListening = false;
+            document.getElementById('micBtn').classList.remove('listening');
+            document.getElementById('micBtn').textContent = '🎤 Mic';
+        };
+    } else {
+        console.log('Speech recognition not supported');
+    }
+}
+
+window.startListening = function() {
+    console.log('startListening called');
+    
+    // Check if we're already listening
+    if (isListening) {
+        console.log('Already listening, stopping...');
+        if (recognition) {
+            recognition.stop();
+        }
+        return;
+    }
+    
+    // Request microphone permission first
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        console.log('Requesting microphone permission...');
+        
+        navigator.mediaDevices.getUserMedia({ 
+            audio: {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+            }
+        })
+        .then(function(stream) {
+            console.log('Microphone permission granted');
+            
+            // Stop the stream as we only needed permission
+            stream.getTracks().forEach(track => track.stop());
+            
+            // Now start speech recognition
+            if (!recognition) {
+                console.log('Initializing speech recognition...');
+                initSpeechRecognition();
+            }
+            
+            if (recognition && !isListening) {
+                try {
+                    console.log('Starting speech recognition...');
+                    recognition.start();
+                } catch (error) {
+                    console.error('Error starting speech recognition:', error);
+                    alert('Error starting speech recognition: ' + error.message);
+                }
+            }
+        })
+        .catch(function(error) {
+            console.error('Microphone permission error:', error);
+            
+            if (error.name === 'NotAllowedError') {
+                alert('Microphone permission was denied. Please allow microphone access in your browser settings and try again.');
+            } else if (error.name === 'NotFoundError') {
+                alert('No microphone found. Please connect a microphone and try again.');
+            } else if (error.name === 'NotSupportedError') {
+                alert('Your browser does not support microphone access. Please use a modern browser like Chrome, Firefox, or Edge.');
+            } else {
+                alert('Error accessing microphone: ' + error.message);
+            }
+        });
+    } else {
+        console.error('getUserMedia not supported');
+        alert('Your browser does not support microphone access. Please use a modern browser like Chrome, Firefox, or Edge.');
+    }
+};
+
+function processVoiceCommand(transcript) {
+    console.log('Voice command:', transcript);
+    
+    // HTML commands - updated to match popup
+    if (transcript.includes('html button')) {
+        insertHTML('<button onclick="yourFunction()">Click me</button>');
+    } else if (transcript.includes('html paragraph')) {
+        insertHTML('<p>Your paragraph content here</p>');
+    } else if (transcript.includes('html heading')) {
+        insertHTML('<h1>Your heading here</h1>');
+    } else if (transcript.includes('paragraph') || transcript.includes('p tag')) {
+        insertHTML('<p>Your paragraph content here</p>');
+    } else if (transcript.includes('heading') || transcript.includes('h1')) {
+        insertHTML('<h1>Your heading here</h1>');
+    } else if (transcript.includes('button') || transcript.includes('btn')) {
+        insertHTML('<button onclick="yourFunction()">Click me</button>');
+    } else if (transcript.includes('div') || transcript.includes('container')) {
+        insertHTML('<div class="container">Your content here</div>');
+    } else if (transcript.includes('html basic') || transcript.includes('html template')) {
+        insertHTMLBasic();
+    }
+    // CSS commands - updated to match popup
+    else if (transcript.includes('css center')) {
+        insertCSS('text-align: center;');
+    } else if (transcript.includes('css color')) {
+        insertCSS('color: #333;');
+    } else if (transcript.includes('center') || transcript.includes('text center')) {
+        insertCSS('text-align: center;');
+    } else if (transcript.includes('color') || transcript.includes('text color')) {
+        insertCSS('color: #333;');
+    } else if (transcript.includes('background') || transcript.includes('bg')) {
+        insertCSS('background-color: #f0f0f0;');
+    } else if (transcript.includes('margin') || transcript.includes('spacing')) {
+        insertCSS('margin: 20px;');
+    }
+    // JavaScript commands - updated to match popup
+    else if (transcript.includes('js function')) {
+        insertJS('function yourFunction() {\n    console.log("Hello World!");\n}');
+    } else if (transcript.includes('function') || transcript.includes('js function')) {
+        insertJS('function yourFunction() {\n    console.log("Hello World!");\n}');
+    } else if (transcript.includes('alert') || transcript.includes('popup')) {
+        insertJS('alert("Hello from JavaScript!");');
+    } else if (transcript.includes('console') || transcript.includes('log')) {
+        insertJS('console.log("Your message here");');
+    }
+    else {
+        // Show a message that the command wasn't recognized
+        const message = document.getElementById('message');
+        message.innerHTML = 'Command not recognized. Try saying "HTML button", "CSS center", or "JS function"';
+        message.style.color = '#ff6b6b';
+    }
+}
+
+function insertHTML(content) {
+    const htmlPanel = document.getElementById('htmlpanel');
+    if (htmlPanel) {
+        htmlPanel.value += '\n' + content;
+        htmlPanel.dispatchEvent(new Event('input'));
+    }
+}
+
+function insertCSS(content) {
+    const cssPanel = document.getElementById('csspanel');
+    if (cssPanel) {
+        cssPanel.value += '\n' + content;
+        cssPanel.dispatchEvent(new Event('input'));
+    }
+}
+
+function insertJS(content) {
+    const jsPanel = document.getElementById('jspanel');
+    if (jsPanel) {
+        jsPanel.value += '\n' + content;
+        jsPanel.dispatchEvent(new Event('input'));
+    }
+}
+
+function insertHTMLBasic() {
+    const basicHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>This is a basic HTML template.</p>
+</body>
+</html>`;
+    const htmlPanel = document.getElementById('htmlpanel');
+    if (htmlPanel) {
+        htmlPanel.value = basicHTML;
+        htmlPanel.dispatchEvent(new Event('input'));
+    }
+}
+
+
+
+// Add some interactive features
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Co.ak Code Runner loaded successfully!');
+    
+    // Initialize speech recognition
+    initSpeechRecognition();
+    
+    // Close popup when clicking outside
+    document.addEventListener('click', function(e) {
+        const popup = document.getElementById('docsPopup');
+        const docsBtn = document.getElementById('notepadBtn');
+        
+        if (popup && !popup.classList.contains('hidden')) {
+            if (!popup.contains(e.target) && !docsBtn.contains(e.target)) {
+                hideDocumentation();
+            }
+        }
+    });
+    
+    // Add click animation to cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+    
+    // Add hover effects to demo section
+    const demoSection = document.querySelector('.demo-section');
+    if (demoSection) {
+        demoSection.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.2)';
+        });
+        
+        demoSection.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    }
+    
+    // Add typing effect to subtitle
+    const subtitle = document.querySelector('.subtitle');
+    if (subtitle) {
+        const originalText = subtitle.textContent;
+        subtitle.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < originalText.length) {
+                subtitle.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        
+        setTimeout(typeWriter, 1000);
+    }
+});</textarea>
 
         <iframe id="iopanel" class="panel"></iframe>
+        </div>
+
+        <!-- Documentation Popup -->
+        <div id="docsPopup" class="docs-popup hidden" style="display: none;">
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h3>Voice Commands</h3>
+                    <button onclick="hideDocumentation()" class="close-docs">×</button>
+                </div>
+                <div class="docs-body">
+                    <div class="command-group">
+                        <h4>HTML Commands</h4>
+                        <div class="command-item">
+                            <span class="command-text">"HTML button"</span>
+                            <span class="command-desc">Adds HTML button element</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-text">"HTML paragraph"</span>
+                            <span class="command-desc">Adds paragraph element</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-text">"HTML heading"</span>
+                            <span class="command-desc">Adds heading element</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>CSS Commands</h4>
+                        <div class="command-item">
+                            <span class="command-text">"CSS center"</span>
+                            <span class="command-desc">Adds text-align center</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-text">"CSS color"</span>
+                            <span class="command-desc">Adds color property</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>JavaScript Commands</h4>
+                        <div class="command-item">
+                            <span class="command-text">"JS function"</span>
+                            <span class="command-desc">Adds function template</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script type="text/javascript">
 
@@ -36,11 +676,20 @@
                $("iframe").contents().find("html").html("<html><head><style type='text/css'>" + $("#csspanel").val() + "</style></head><body>" + $("#htmlpanel").val() + "</body></html>");
 
                 document.getElementById("iopanel").contentWindow.eval($("#jspanel").val());
-
-                //document.getElementById("#iopanel").contentWindow.eval($("#jspanel").val());
             }
+            // Set panel height to fit viewport
             $(".panel").height($(window).height() - $("#header").height() - 15);
-            $(".panel").width(($(window).width() / 2) - 10);
+            
+            // Initial setup: HTML and Output visible
+            $("#htmlpanel").removeClass("hidden");
+            $("#iopanel").removeClass("hidden");
+            $("#csspanel").addClass("hidden");
+            $("#jspanel").addClass("hidden");
+            
+            // Set initial widths for horizontal layout
+            $(".panel").not("#iopanel").width(($(window).width() / 2) - 10);
+            $("#iopanel").width(($(window).width() / 2) - 10);
+            
             updateOutput();
 
             $("textarea").on('change keyup paste', function() {
@@ -48,21 +697,298 @@
             }); 
             
             $(".toggleButton").click(function() {
-                
                 var panelId = $(this).attr("id") + "panel";
                 
+                // Don't allow hiding the output panel
+                if (panelId !== "iopanel") {
                 $("#" + panelId).toggleClass("hidden"); 
+                }
                 
-                var numberOfActivePanels = 4 - $('.hidden').length;
+                // Count visible panels (excluding output which is always visible)
+                var numberOfActivePanels = 1; // Output is always visible
+                $(".panel").not("#iopanel").each(function() {
+                    if (!$(this).hasClass("hidden")) {
+                        numberOfActivePanels++;
+                    }
+                });
                 
-                $(".panel").width(($(window).width() / numberOfActivePanels) - 10);
-                
+                // Resize panels
+                $(".panel").not("#iopanel").width(($(window).width() / numberOfActivePanels) - 10);
+                $("#iopanel").width(($(window).width() / numberOfActivePanels) - 10);
             });
             
-           
-            
+            // Handle window resize
+            $(window).resize(function() {
+                $(".panel").height($(window).height() - $("#header").height() - 15);
+                
+                // Recalculate panel widths
+                var numberOfActivePanels = 1; // Output is always visible
+                $(".panel").not("#iopanel").each(function() {
+                    if (!$(this).hasClass("hidden")) {
+                        numberOfActivePanels++;
+                    }
+                });
+                
+                $(".panel").not("#iopanel").width(($(window).width() / numberOfActivePanels) - 10);
+                $("#iopanel").width(($(window).width() / numberOfActivePanels) - 10);
+            });
 
             // $("iframe").contents().find("html").html($("#html"));
+
+            // Speech recognition functionality
+            let recognition = null;
+            let isListening = false;
+
+            function initSpeechRecognition() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    recognition = new SpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.interimResults = false;
+                    recognition.lang = 'en-US';
+                    
+                    recognition.onstart = function() {
+                        isListening = true;
+                        document.getElementById('micBtn').classList.add('listening');
+                        document.getElementById('micBtn').textContent = '🎤 Listening...';
+                    };
+                    
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript.toLowerCase();
+                        processVoiceCommand(transcript);
+                    };
+                    
+                    recognition.onend = function() {
+                        isListening = false;
+                        document.getElementById('micBtn').classList.remove('listening');
+                        document.getElementById('micBtn').textContent = '🎤 Mic';
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        console.error('Speech recognition error:', event.error);
+                        isListening = false;
+                        document.getElementById('micBtn').classList.remove('listening');
+                        document.getElementById('micBtn').textContent = '🎤 Mic';
+                    };
+                } else {
+                    console.log('Speech recognition not supported');
+                }
+            }
+
+            function startListening() {
+                console.log('startListening called');
+                
+                // Check if we're already listening
+                if (isListening) {
+                    console.log('Already listening, stopping...');
+                    if (recognition) {
+                        recognition.stop();
+                    }
+                    return;
+                }
+                
+                // Request microphone permission first
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    console.log('Requesting microphone permission...');
+                    
+                    navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        }
+                    })
+                    .then(function(stream) {
+                        console.log('Microphone permission granted');
+                        
+                        // Stop the stream as we only needed permission
+                        stream.getTracks().forEach(track => track.stop());
+                        
+                        // Now start speech recognition
+                        if (!recognition) {
+                            console.log('Initializing speech recognition...');
+                            initSpeechRecognition();
+                        }
+                        
+                        if (recognition && !isListening) {
+                            try {
+                                console.log('Starting speech recognition...');
+                                recognition.start();
+                            } catch (error) {
+                                console.error('Error starting speech recognition:', error);
+                                alert('Error starting speech recognition: ' + error.message);
+                            }
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Microphone permission error:', error);
+                        
+                        if (error.name === 'NotAllowedError') {
+                            alert('Microphone permission was denied. Please allow microphone access in your browser settings and try again.');
+                        } else if (error.name === 'NotFoundError') {
+                            alert('No microphone found. Please connect a microphone and try again.');
+                        } else if (error.name === 'NotSupportedError') {
+                            alert('Your browser does not support microphone access. Please use a modern browser like Chrome, Firefox, or Edge.');
+                        } else {
+                            alert('Error accessing microphone: ' + error.message);
+                        }
+                    });
+                } else {
+                    console.error('getUserMedia not supported');
+                    alert('Your browser does not support microphone access. Please use a modern browser like Chrome, Firefox, or Edge.');
+                }
+            }
+
+            function processVoiceCommand(transcript) {
+                console.log('Voice command:', transcript);
+                
+                // HTML commands - updated to match popup
+                if (transcript.includes('html button')) {
+                    insertHTML('<button onclick="yourFunction()">Click me</button>');
+                } else if (transcript.includes('html paragraph')) {
+                    insertHTML('<p>Your paragraph content here</p>');
+                } else if (transcript.includes('html heading')) {
+                    insertHTML('<h1>Your heading here</h1>');
+                } else if (transcript.includes('paragraph') || transcript.includes('p tag')) {
+                    insertHTML('<p>Your paragraph content here</p>');
+                } else if (transcript.includes('heading') || transcript.includes('h1')) {
+                    insertHTML('<h1>Your heading here</h1>');
+                } else if (transcript.includes('button') || transcript.includes('btn')) {
+                    insertHTML('<button onclick="yourFunction()">Click me</button>');
+                } else if (transcript.includes('div') || transcript.includes('container')) {
+                    insertHTML('<div class="container">Your content here</div>');
+                } else if (transcript.includes('html basic') || transcript.includes('html template')) {
+                    insertHTMLBasic();
+                }
+                // CSS commands - updated to match popup
+                else if (transcript.includes('css center')) {
+                    insertCSS('text-align: center;');
+                } else if (transcript.includes('css color')) {
+                    insertCSS('color: #333;');
+                } else if (transcript.includes('center') || transcript.includes('text center')) {
+                    insertCSS('text-align: center;');
+                } else if (transcript.includes('color') || transcript.includes('text color')) {
+                    insertCSS('color: #333;');
+                } else if (transcript.includes('background') || transcript.includes('bg')) {
+                    insertCSS('background-color: #f0f0f0;');
+                } else if (transcript.includes('margin') || transcript.includes('spacing')) {
+                    insertCSS('margin: 20px;');
+                }
+                // JavaScript commands - updated to match popup
+                else if (transcript.includes('js function')) {
+                    insertJS('function yourFunction() {\n    console.log("Hello World!");\n}');
+                } else if (transcript.includes('function') || transcript.includes('js function')) {
+                    insertJS('function yourFunction() {\n    console.log("Hello World!");\n}');
+                } else if (transcript.includes('alert') || transcript.includes('popup')) {
+                    insertJS('alert("Hello from JavaScript!");');
+                } else if (transcript.includes('console') || transcript.includes('log')) {
+                    insertJS('console.log("Your message here");');
+                }
+                else {
+                    // Show a message that the command wasn't recognized
+                    const message = document.getElementById('message');
+                    message.innerHTML = 'Command not recognized. Try saying "HTML button", "CSS center", or "JS function"';
+                    message.style.color = '#ff6b6b';
+                }
+            }
+
+            function insertHTML(content) {
+                const htmlPanel = document.getElementById('htmlpanel');
+                if (htmlPanel) {
+                    htmlPanel.value += '\n' + content;
+                    htmlPanel.dispatchEvent(new Event('input'));
+                }
+            }
+
+            function insertCSS(content) {
+                const cssPanel = document.getElementById('csspanel');
+                if (cssPanel) {
+                    cssPanel.value += '\n' + content;
+                    cssPanel.dispatchEvent(new Event('input'));
+                }
+            }
+
+            function insertJS(content) {
+                const jsPanel = document.getElementById('jspanel');
+                if (jsPanel) {
+                    jsPanel.value += '\n' + content;
+                    jsPanel.dispatchEvent(new Event('input'));
+                }
+            }
+
+            function insertHTMLBasic() {
+                const basicHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>This is a basic HTML template.</p>
+</body>
+</html>`;
+                const htmlPanel = document.getElementById('htmlpanel');
+                if (htmlPanel) {
+                    htmlPanel.value = basicHTML;
+                    htmlPanel.dispatchEvent(new Event('input'));
+                }
+            }
+
+            function showDocumentation() {
+                console.log('showDocumentation called');
+                const popup = document.getElementById('docsPopup');
+                console.log('Popup element:', popup);
+                if (popup) {
+                    console.log('Showing popup');
+                    popup.classList.remove('hidden');
+                    popup.style.display = 'block';
+                    popup.style.visibility = 'visible';
+                    popup.style.opacity = '1';
+                    console.log('Popup should be visible now');
+                } else {
+                    console.error('Popup element not found!');
+                }
+            }
+
+            function hideDocumentation() {
+                const popup = document.getElementById('docsPopup');
+                if (popup) {
+                    popup.classList.add('hidden');
+                    popup.style.display = 'none';
+                    popup.style.visibility = 'hidden';
+                    popup.style.opacity = '0';
+                }
+            }
+
+            function changeMessage() {
+                const message = document.getElementById('message');
+                const messages = [
+                    'JavaScript is working perfectly!',
+                    'Try editing the CSS to change colors!',
+                    'This is a live code runner!',
+                    'Edit the HTML to add more content!',
+                    'The styling looks amazing!',
+                    'Live updates are instant!',
+                    'Try editing the JavaScript!',
+                    'JavaScript is so powerful!'
+                ];
+                
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                message.innerHTML = randomMessage;
+                message.style.color = '#ff6b6b';
+                message.style.fontWeight = 'bold';
+                
+                // Add a nice animation
+                message.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    message.style.transform = 'scale(1)';
+                }, 200);
+            }
+
+            // Initialize speech recognition on page load
+            initSpeechRecognition();
          </script>
     </body>
 </html>
