@@ -28,12 +28,12 @@ A modern, voice-controlled web-based code runner that supports HTML, CSS, and Ja
 1. Fork this repository
 2. Go to Settings → Pages
 3. Select "Deploy from a branch" and choose `main`
-4. Your app will be available at `https://yourusername.github.io/coak`
+4. Your app will be available at `[https://yourusername.github.io/coak](https://akshayubc.github.io/coak/)`
 
 ### Option 2: Local Development
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/coak.git
+   git clone [https://github.com/yourusername/coak.git](https://github.com/akshayubc/coak.git)
    cd coak
    ```
 2. Open `index.html` in your browser
